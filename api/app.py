@@ -61,7 +61,14 @@ def needleman_wunsch(seq1, seq2, match_score, mismatch_score, gap_penalty):
 
 
 class handler(BaseHTTPRequestHandler):
+    def do_GET(self):
+        self.send_response(200)
+        self.send_header("Content-Type", "application/json")
+        self.end_headers()
 
+        response = {"message": "Needleman-Wunsch API running"}
+        self.wfile.write(json.dumps(response).encode())
+    
     def do_POST(self):
 
         content_length = int(self.headers['Content-Length'])
