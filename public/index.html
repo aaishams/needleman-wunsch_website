@@ -51,8 +51,13 @@ const data = await response.json()
 document.getElementById("result").textContent =
 data.alignment1 + "\n" +
 data.alignment2 + "\n\nScore: " + data.score
+let matrixText = ""
 
+for (let row of data.matrix){
+    matrixText += row.join("\t") + "\n"
 }
+
+document.getElementById("matrix").textContent = matrixText
 
 </script>
 
