@@ -59,6 +59,45 @@ def needleman_wunsch(seq1, seq2, match_score, mismatch_score, gap_penalty):
 
     return align1, align2, matrix
 
+def smith_waterman(seq1, seq2, match_score, mismatch_score, gap_penalty):
+    matrix = [[0 for i in range(len(seq2) + 1)] for i in range(len(seq1) + 1)]
+    max_score = 0
+    max_pos = (0, 0)
+
+    for i in range(1, len(seq1) + 1):
+        matrix[i][0] = max(0, i * gap_penalty)
+    for j in range(1, len(seq2) + 1):
+        matrix[0][j] = max(0, j * gap_penalty)
+
+    for i in range(1, len(seq1) + 1):
+        for j in range(1, len(seq2) + 1):
+            a = matrix[i - 1][j] + gap_penalty
+            b = matrix[i][j - 1] + gap_penalty
+            c = matrix[i - 1][j - 1] + (match_score if seq1[i - 1] == seq2[j - 1] else mismatch_score)
+            matrix[i][j] = max(0, a, b, c)
+            if matrix[i][j] > max_score:
+                max_score = matrix[i][j]
+                max_pos = (i, j)
+
+    align1 = ''
+    align2 = ''
+    i, j = max_pos
+    while i > 0 or j > 0 and matrix[i][j] != 0:
+        if i > 0 and matrix[i][j] == matrix[i - 1][j] + gap_penalty:
+            align1 = seq1[i - 1] + align1
+            align2 = '-' + align2
+            i -= 1
+        elif j > 0 and matrix[i][j] == matrix[i][j - 1] + gap_penalty:
+            align1 = '-' + align1
+            align2 = seq2[j - 1] + align2
+            j -= 1
+        else:
+            align1 = seq1[i - 1] + align1
+            align2 = seq2[j - 1] + align2 
+            i -= 1
+            j -= 1
+
+    return align1, align2, max_score, matrix
 
 class handler(BaseHTTPRequestHandler):
     def do_GET(self):
