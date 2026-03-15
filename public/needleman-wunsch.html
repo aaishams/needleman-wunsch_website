@@ -45,7 +45,7 @@ const gap=document.getElementById("gap").value
 const response = await fetch("/api",{
 method:"POST",
 headers:{ "Content-Type":"application/json" },
-body: JSON.stringify({seq1,seq2,match,mismatch,gap})
+body: JSON.stringify({seq1,seq2,match,mismatch,gap,method:"needleman"})
 })
 
 const data = await response.json()
